@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Matematika</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Asah Otak Matematika dengan Waktu!</h1>
+        <p>Soal ke-{{ question_number }} dari {{ total_questions }}</p>
+        {% if question_number == 1 %}
+            <button id="start-button">Mulai</button>
+        {% endif %}
+        <div id="question-area" {% if question_number > 1 %} style="display: block;" {% endif %}>
+            <p id="timer">Waktu: <span id="time"></span> detik</p>
+            <p><b>{{ question }}</b></p>
+            <form method="POST" id="question-form">
+                <input type="number" name="answer" autofocus>
+                <button type="submit">Jawab</button>
+            </form>
+            {% if feedback %}
+                <p class="feedback {{ feedback_class }}">{{ feedback }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 10; // Waktu dalam detik untuk setiap soal
+        const timerDisplay = document.getElementById('time');
+        const questionForm = document.getElementById('question-form');
+        const startButton = document.getElementById('start-button');
+        const questionArea = document.getElementById('question-area');
+        const answerInput = questionForm.querySelector('input[name="answer"]'); // Dapatkan elemen input
+        let timerInterval;
+        let gameStarted = {{ 'true' if question_number > 1 else 'false' }};
+
+        function updateTimer() {
+            timerDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval); // Hentikan timer
+                questionForm.submit(); // Otomatis submit jika waktu habis
+            } else {
+                timeLeft--;
+            }
+        }
+
+        function startTimer() {
+            if (startButton) {
+                startButton.style.display = 'none'; // Sembunyikan tombol mulai
+            }
+            questionArea.style.display = 'block'; // Tampilkan area pertanyaan
+            timerDisplay.parentElement.style.display = 'block'; // Tampilkan timer
+            timeLeft = 10; // Reset waktu
+            timerDisplay.textContent = timeLeft;
+            timerInterval = setInterval(updateTimer, 1000); // Mulai timer
+            gameStarted = true;
+            answerInput.focus(); // Set fokus ke input jawaban
+        }
+
+        if (startButton) {
+            startButton.addEventListener('click', startTimer);
+        } else if (!gameStarted) {
+            startTimer(); // Langsung mulai timer untuk soal berikutnya
+        } else if (gameStarted && !timerInterval) {
+            startTimer(); // Memastikan timer dimulai lagi jika gameStarted true
+        } else if (gameStarted && timerInterval && answerInput) {
+            answerInput.focus(); // Pastikan fokus saat soal berikutnya muncul
+        }
+    </script>
+</body>
+</html>

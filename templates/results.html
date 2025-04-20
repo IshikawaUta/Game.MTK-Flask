@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hasil</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Selamat!</h1>
+        <p class="score">Skor Akhir Anda: {{ score }} dari {{ total_questions }}</p>
+        <a href="{{ url_for('index') }}">Main Lagi!</a>
+    </div>
+</body>
+</html>
