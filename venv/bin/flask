@@ -1,4 +1,4 @@
-#!/home/uta09/blok-puzzle/venv/bin/python3
+#!/home/uta09/game-mtk/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
